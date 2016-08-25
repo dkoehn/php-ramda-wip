@@ -1,0 +1,6 @@
+{
+  "name": "php-ramda",
+  "autoload": {
+    "files": ["src/internal.php", "src/functions.php", "src/list.php", "src/math.php", "src/logic.php"]
+  }
+}
