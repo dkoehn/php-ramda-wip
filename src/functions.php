@@ -7,6 +7,7 @@ namespace PHPRambda\Functions {
 	use function \PHPRambda\Internal\_curry2;
 	use function \PHPRambda\Internal\_curryN;
 	use function \PHPRambda\Internal\_arity;
+	use function \PHPRambda\Internal\_toArray;
 	use function \PHPRambda\Internal\_isPlaceholder;
 //	use function \PHPRambda\Internal\_reduce;
 //	use function \PHPRambda\Internal\_slice;
@@ -48,6 +49,10 @@ namespace PHPRambda\Functions {
 	function apply($fn = _, $list = _)
 	{
 		return _curry2(function($fn, $list) {
+			if ($list instanceOf \Generator) {
+				$list = _toArray($list);
+			}
+
 			return $fn(...$list);
 		}, $fn, $list);
 	}

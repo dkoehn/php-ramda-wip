@@ -4,6 +4,19 @@ namespace PHPRambda\Internal {
 
 	use const \PHPRambda\Functions\_;
 
+	function _toArray($generator)
+	{
+		if ($generator instanceOf \Generator) {
+			$ret = [];
+			foreach ($generator as $k => $v) {
+				$ret[$k] = $v;
+			}
+			return $ret;
+		}
+
+		return (array)$generator;
+	}
+
 	function _numArgs(callable $callable)
 	{
 		if ($callable instanceOf \Closure || is_string($callable)) {

@@ -45,6 +45,38 @@ namespace PHPRambda\Math {
 		}, $a, $b);
 	}
 
+	function mean($list = _)
+	{
+		return _curry1(function($list) {
+			return sum($list) / count($list);
+		}, $list);
+	}
+
+	function modulo($a = _, $b = _)
+	{
+		return _curry2(function($a, $b) {
+			return $a % $b;
+		}, $a, $b);
+	}
+
+	function negate($a = _)
+	{
+		return _curry1(function($a) {
+			return 0 - $a;
+		});
+	}
+
+	function product($list = _)
+	{
+		return _curry1(function($list) {
+			$ret = 1;
+			foreach ($list as $v) {
+				$ret *= $v;
+			}
+			return $ret;
+		});
+	}
+
 	function subtract($a = _, $b = _)
 	{
 		return _curry2(function($a, $b) {
@@ -52,73 +84,22 @@ namespace PHPRambda\Math {
 		}, $a, $b);
 	}
 
+	function sum($list = _)
+	{
+		return _curry1(function($list) {
+			$ret = 0;
+			foreach ($list as $v) {
+				$ret += $v;
+			}
+			return $ret;
+		}, $list);
+	}
+
 	function multiply($a = _, $b = _)
 	{
 		return _curry2(function($a, $b) {
 			return $a * $b;
 		}, $a, $b);
-	}
-
-	function max(...$args)
-	{
-		$max = function(...$args) {
-			if (count($args) === 0) {
-				return null;
-			}
-
-			if (count($args) === 1 && is_array($args[0])) {
-				$args = $args[0];
-			}
-
-			$max = $args[0];
-			for ($i = 1; $i < count($args); $i++) {
-				if ($args[$i] > $max) {
-					$max = $args[$i];
-				}
-			}
-			return $max;
-		};
-
-		if (count($args)) {
-			if (count($args) === 1 && is_array($args[0])) {
-				$args = $args[0];
-			}
-
-			return $max(...$args);
-		}
-
-		return $max;
-	}
-
-	function min(...$args)
-	{
-		$min = function(...$args) {
-			if (count($args) === 0) {
-				return null;
-			}
-
-			if (count($args) === 1 && is_array($args[0])) {
-				$args = $args[0];
-			}
-
-			$min = $args[0];
-			for ($i = 1; $i < count($args); $i++) {
-				if ($args[$i] < $min) {
-					$min = $args[$i];
-				}
-			}
-			return $min;
-		};
-
-		if (count($args)) {
-			if (count($args) === 1 && is_array($args[0])) {
-				$args = $args[0];
-			}
-
-			return $min(...$args);
-		}
-
-		return $min;
 	}
 
 	function pow($a = _, $b = _)
