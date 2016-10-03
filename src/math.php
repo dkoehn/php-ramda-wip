@@ -1,111 +1,119 @@
 <?php
 
 namespace PHPRambda\Math {
-
-	use const \PHPRambda\Functions\_;
+	use const \PHPRambda\Functions\__;
 	use function \PHPRambda\Internal\_curry1;
 	use function \PHPRambda\Internal\_curry2;
+	use function \PHPRambda\Lists\reduce;
 
-	function add($a = _, $b = _)
+	function add($a = __, $b = __)
 	{
 		return _curry2(function($a, $b) {
 			return $a + $b;
 		}, $a, $b);
 	}
 
-	function dec($a = _)
+	function dec($a = __)
 	{
 		return _curry1(function($a) {
 			return $a - 1;
 		}, $a);
 	}
 
-	function divide($a = _, $b = _)
+	function divide($a = __, $b = __)
 	{
 		return _curry2(function($a, $b) {
 			if ($b === 0) {
-				throw new \DivisionByZeroError();
+				return null;
 			}
 
 			return $a / $b;
 		}, $a, $b);
 	}
 
-	function inc($a = _)
+	function inc($a = __)
 	{
 		return _curry1(function($a) {
 			return $a + 1;
 		}, $a);
 	}
 
-	function mathMod($a = _, $b = _)
+	function mathMod($a = __, $b = __)
 	{
 		return _curry2(function($a, $b) {
+			if ($b === 0) {
+				return null;
+			}
+
 			return (($a % $b) + $b) % $b;
 		}, $a, $b);
 	}
 
-	function mean($list = _)
+	function mean($list = __)
 	{
 		return _curry1(function($list) {
+			if (count($list) === 0) {
+				return null;
+			}
+
 			return sum($list) / count($list);
 		}, $list);
 	}
 
-	function modulo($a = _, $b = _)
+	function median($list = __)
+	{
+		return _curry1(function($list) {
+			$len = count($list);
+			if ($len === 0) {
+				return null;
+			}
+
+			$width = 2 - $len % 2;
+			$idx = ($len - $width) / 2;
+			sort($list);
+			return mean(array_slice($list, $idx, $width));
+		}, $list);
+	}
+
+	function modulo($a = __, $b = __)
 	{
 		return _curry2(function($a, $b) {
 			return $a % $b;
 		}, $a, $b);
 	}
 
-	function negate($a = _)
-	{
-		return _curry1(function($a) {
-			return 0 - $a;
-		});
-	}
-
-	function product($list = _)
-	{
-		return _curry1(function($list) {
-			$ret = 1;
-			foreach ($list as $v) {
-				$ret *= $v;
-			}
-			return $ret;
-		});
-	}
-
-	function subtract($a = _, $b = _)
-	{
-		return _curry2(function($a, $b) {
-			return $a - $b;
-		}, $a, $b);
-	}
-
-	function sum($list = _)
-	{
-		return _curry1(function($list) {
-			$ret = 0;
-			foreach ($list as $v) {
-				$ret += $v;
-			}
-			return $ret;
-		}, $list);
-	}
-
-	function multiply($a = _, $b = _)
+	function multiply($a = __, $b = __)
 	{
 		return _curry2(function($a, $b) {
 			return $a * $b;
 		}, $a, $b);
 	}
 
-	function pow($a = _, $b = _)
+	function negate($a = __)
+	{
+		return _curry1(function($a) {
+			return 0 - $a;
+		}, $a);
+	}
+
+	function product($list = __)
+	{
+		return _curry1(function($list) {
+			return reduce(multiply(), 1, $list);
+		}, $list);
+	}
+
+	function subtract($a = __, $b = __)
 	{
 		return _curry2(function($a, $b) {
-			return $a ** $b;
+			return $a - $b;
 		}, $a, $b);
+	}
+
+	function sum($list = __)
+	{
+		return _curry1(function($list) {
+			return reduce(add(), 0, $list);
+		}, $list);
 	}
 }

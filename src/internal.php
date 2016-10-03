@@ -2,20 +2,7 @@
 
 namespace PHPRambda\Internal {
 
-	use const \PHPRambda\Functions\_;
-
-	function _toArray($generator)
-	{
-		if ($generator instanceOf \Generator) {
-			$ret = [];
-			foreach ($generator as $k => $v) {
-				$ret[$k] = $v;
-			}
-			return $ret;
-		}
-
-		return (array)$generator;
-	}
+	use const \PHPRambda\Functions\__;
 
 	function _numArgs(callable $callable)
 	{
@@ -30,7 +17,7 @@ namespace PHPRambda\Internal {
 		return $reflector->getNumberOfParameters();
 	}
 
-	function _curry1(callable $fn, $a = _)
+	function _curry1(callable $fn, $a = __)
 	{
 		if (_isPlaceholder($a)) {
 			return function($a) use ($fn) {
@@ -41,14 +28,14 @@ namespace PHPRambda\Internal {
 		return $fn($a);
 	}
 
-	function _curry2(callable $fn, $a = _, $b = _)
+	function _curry2(callable $fn, $a = __, $b = __)
 	{
 		if (!_isPlaceholder($a) && !_isPlaceholder($b)) {
 			return $fn($a, $b);
 		}
 
 		if (_isPlaceholder($a) && _isPlaceholder($b)) {
-			return function($a = _, $b = _) use ($fn) {
+			return function($a = __, $b = __) use ($fn) {
 				return _curry2($fn, $a, $b);
 			};
 		} elseif (_isPlaceholder($a)) {
@@ -62,25 +49,25 @@ namespace PHPRambda\Internal {
 		}
 	}
 
-	function _curry3(callable $fn, $a = _, $b = _, $c = _)
+	function _curry3(callable $fn, $a = __, $b = __, $c = __)
 	{
 		if (!_isPlaceholder($a) && !_isPlaceholder($b) && !_isPlaceholder($c)) {
 			return $fn($a, $b, $c);
 		}
 
 		if (_isPlaceholder($a) && _isPlaceholder($b) && _isPlaceholder($c)) {
-			return function($a = _, $b = _, $c = _) use ($fn) {
+			return function($a = __, $b = __, $c = __) use ($fn) {
 				return _curry3($fn, $a, $b, $c);
 			};
 		}
 
 		if (_isPlaceholder($a)) {
 			if (_isPlaceholder($b)) {
-				return _curry2(function($_a, $_b) use ($fn, $c) {
+				return _curry2(function($_a, $_b = __) use ($fn, $c) {
 					return $fn($_a, $_b, $c);
 				});
 			} elseif (_isPlaceholder($c)) {
-				return _curry2(function($_a, $_c) use ($fn, $b) {
+				return _curry2(function($_a, $_c = __) use ($fn, $b) {
 					return $fn($_a, $b, $_c);
 				});
 			} else {
@@ -90,7 +77,7 @@ namespace PHPRambda\Internal {
 			}
 		} elseif (_isPlaceholder($b)) {
 			if (_isPlaceholder($c)) {
-				return _curry2(function($_b, $_c) use ($fn, $a) {
+				return _curry2(function($_b, $_c = __) use ($fn, $a) {
 					return $fn($a, $_b, $_c);
 				});
 			} else {
@@ -139,47 +126,58 @@ namespace PHPRambda\Internal {
 		switch ($n) {
 			case 0:
 				return function() use ($fn) {
-					return $fn;
+					$args = func_get_args();
+					return $fn(...$args);
 				};
 			case 1:
 				return function($a) use ($fn) {
-					return $fn($a);
+					$args = func_get_args();
+					return $fn(...$args);
 				};
 			case 2:
-				return function($a, $b) use ($fn) {
-					return $fn($a, $b);
+				return function($a, $b = __) use ($fn) {
+					$args = func_get_args();
+					return $fn(...$args);
 				};
 			case 3:
-				return function($a, $b, $c) use ($fn) {
-					return $fn($a, $b, $c);
+				return function($a, $b = __, $c = __) use ($fn) {
+					$args = func_get_args();
+					return $fn(...$args);
 				};
 			case 4:
-				return function($a, $b, $c, $d) use ($fn) {
-					return $fn($a, $b, $c, $d);
+				return function($a, $b = __, $c = __, $d = __) use ($fn) {
+					$args = func_get_args();
+					return $fn(...$args);
 				};
 			case 5:
-				return function($a, $b, $c, $d, $e) use ($fn) {
-					return $fn($a, $b, $c, $d, $e);
+				return function($a, $b = __, $c = __, $d = __, $e = __) use ($fn) {
+					$args = func_get_args();
+					return $fn(...$args);
 				};
 			case 6:
-				return function($a, $b, $c, $d, $e, $f) use ($fn) {
-					return $fn($a, $b, $c, $d, $e, $f);
+				return function($a, $b = __, $c = __, $d = __, $e = __, $f = __) use ($fn) {
+					$args = func_get_args();
+					return $fn(...$args);
 				};
 			case 7:
-				return function($a, $b, $c, $d, $e, $f, $g) use ($fn) {
-					return $fn($a, $b, $c, $d, $e, $f, $g);
+				return function($a, $b = __, $c = __, $d = __, $e = __, $f = __, $g = __) use ($fn) {
+					$args = func_get_args();
+					return $fn(...$args);
 				};
 			case 8:
-				return function($a, $b, $c, $d, $e, $f, $g, $h) use ($fn) {
-					return $fn($a, $b, $c, $d, $e, $f, $g, $h);
+				return function($a, $b = __, $c = __, $d = __, $e = __, $f = __, $g = __, $h = __) use ($fn) {
+					$args = func_get_args();
+					return $fn(...$args);
 				};
 			case 9:
-				return function($a, $b, $c, $d, $e, $f, $g, $h, $i) use ($fn) {
-					return $fn($a, $b, $c, $d, $e, $f, $g, $h, $i);
+				return function($a, $b = __, $c = __, $d = __, $e = __, $f = __, $g = __, $h = __, $i = __) use ($fn) {
+					$args = func_get_args();
+					return $fn(...$args);
 				};
 			case 10:
-				return function($a, $b, $c, $d, $e, $f, $g, $h, $i, $j) use ($fn) {
-					return $fn($a, $b, $c, $d, $e, $f, $g, $h, $i, $j);
+				return function($a, $b = __, $c = __, $d = __, $e = __, $f = __, $g = __, $h = __, $i = __, $j = __) use ($fn) {
+					$args = func_get_args();
+					return $fn(...$args);
 				};
 			default:
 				throw new \RuntimeException('First argument to _arity must be a non-negative integer no greater than ten');
@@ -188,12 +186,7 @@ namespace PHPRambda\Internal {
 
 	function _isPlaceholder($val)
 	{
-		return $val === _;
-	}
-
-	function _isFunction($f)
-	{
-		return is_callable($f);
+		return $val === __;
 	}
 
 	function _reduce($fn, $acc, $list)
@@ -204,17 +197,5 @@ namespace PHPRambda\Internal {
 		}
 
 		return $acc;
-	}
-
-	function _slice($args, $from = null, $to = null)
-	{
-		switch (func_num_args()) {
-			case 1:
-				return _slice($args, 0, count($args));
-			case 2:
-				return _slice($args, $from, count($args));
-			default:
-				return array_slice($args, $from, $to);
-		}
 	}
 }
