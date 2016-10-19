@@ -1,7 +1,7 @@
 <?php
 
-use function \PHPRambda\Math\mean;
-use const \PHPRambda\Functions\__;
+use function \PHPRamda\Math\mean;
+use const \PHPRamda\Functions\__;
 
 describe('mean', function() {
 	it('returns mean of a nonemtpy list', function() {

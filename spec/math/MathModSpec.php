@@ -1,7 +1,7 @@
 <?php
 
-use function \PHPRambda\Math\mathMod;
-use const \PHPRambda\Functions\__;
+use function \PHPRamda\Math\mathMod;
+use const \PHPRamda\Functions\__;
 
 describe('mathMod', function() {
 	it('requires integer arguments', function() {

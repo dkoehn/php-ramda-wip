@@ -1,7 +1,7 @@
 <?php
 
-use function \PHPRambda\Math\multiply;
-use const \PHPRambda\Functions\__;
+use function \PHPRamda\Math\multiply;
+use const \PHPRamda\Functions\__;
 
 describe('multiply', function() {
 	it('multiplies two numbers', function() {

@@ -1,7 +1,7 @@
 <?php
 
-use function \PHPRambda\Math\median;
-use const \PHPRambda\Functions\__;
+use function \PHPRamda\Math\median;
+use const \PHPRamda\Functions\__;
 
 describe('median', function() {
 	it('returns middle value of an odd-length list', function() {

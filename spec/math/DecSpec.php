@@ -1,6 +1,6 @@
 <?php
 
-use function \PHPRambda\Math\dec;
+use function \PHPRamda\Math\dec;
 
 describe('dec', function() {
 	it('decrements its argument', function() {

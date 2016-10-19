@@ -1,14 +1,17 @@
 <?php
 
-namespace PHPRambda\Math {
-	use const \PHPRambda\Functions\__;
-	use function \PHPRambda\Internal\_curry1;
-	use function \PHPRambda\Internal\_curry2;
-	use function \PHPRambda\Lists\reduce;
+namespace PHPRamda\Math {
+	use const \PHPRamda\Functions\__;
+	use function \PHPRamda\Internal\_curry1;
+	use function \PHPRamda\Internal\_curry2;
+	use function \PHPRamda\Lists\reduce;
 
 	function add($a = __, $b = __)
 	{
 		return _curry2(function($a, $b) {
+			if ($a === null) { $a = 0; }
+			if ($b === null) { $b = 0; }
+
 			return $a + $b;
 		}, $a, $b);
 	}

@@ -1,8 +1,8 @@
 <?php
 
-namespace PHPRambda\Internal {
+namespace PHPRamda\Internal {
 
-	use const \PHPRambda\Functions\__;
+	use const \PHPRamda\Functions\__;
 
 	function _numArgs(callable $callable)
 	{
@@ -197,5 +197,14 @@ namespace PHPRambda\Internal {
 		}
 
 		return $acc;
+	}
+
+	function _pipe($f = __, $g = __)
+	{
+		return _curry2(function($f, $g) {
+			return function(...$args) use ($f, $g) {
+				return $g($f(...$args));
+			};
+		}, $f, $g);
 	}
 }

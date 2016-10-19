@@ -1,6 +1,6 @@
 <?php
 
-use function \PHPRambda\Math\sum;
+use function \PHPRamda\Math\sum;
 
 describe('sum', function() {
 	it('adds together the array of numbers supplied', function() {

@@ -1,7 +1,7 @@
 <?php
 
-use function \PHPRambda\Math\modulo;
-use const \PHPRambda\Functions\__;
+use function \PHPRamda\Math\modulo;
+use const \PHPRamda\Functions\__;
 
 describe('modulo', function() {
 	it('divides the first param by the second and returns the remainder', function() {

@@ -1,6 +1,6 @@
 <?php
 
-use function \PHPRambda\Math\product;
+use function \PHPRamda\Math\product;
 
 describe('product', function() {
 	it('multiplies together the array of numbers supplied', function() {

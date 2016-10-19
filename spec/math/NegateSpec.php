@@ -1,6 +1,6 @@
 <?php
 
-use function \PHPRambda\Math\negate;
+use function \PHPRamda\Math\negate;
 
 describe('negate', function() {
 	it('negates its argument', function() {

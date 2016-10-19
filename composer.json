@@ -1,13 +1,13 @@
 {
   "name": "php-ramda",
   "autoload": {
-    "files": [ "src/internal.php", "src/functions.php", "src/math.php", "src/list.php" ]
+    "files": [ "src/internal.php", "src/functions.php", "src/math.php", "src/lists.php", "src/object.php" ]
   },
   "require-dev": {
     "davedevelopment/dspec": "dev-master",
     "hamcrest/hamcrest-php": "^2.0"
   },
   "autoload-dev": {
-    "files": [ "vendor/hamcrest/hamcrest-php/hamcrest/Hamcrest.php" ]
+    "files": [ "vendor/hamcrest/hamcrest-php/hamcrest/Hamcrest.php", "spec/shared/eq.php" ]
   }
 }

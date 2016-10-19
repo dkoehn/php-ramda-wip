@@ -1,8 +1,8 @@
 <?php
 
-use const \PHPRambda\Functions\__;
-use function \PHPRambda\Functions\curry;
-use function \PHPRambda\Internal\_numArgs;
+use const \PHPRamda\Functions\__;
+use function \PHPRamda\Functions\curry;
+use function \PHPRamda\Internal\_numArgs;
 
 describe('curry', function() {
 	it('curries a single value', function() {

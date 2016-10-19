@@ -1,6 +1,6 @@
 <?php
 
-use function \PHPRambda\Math\inc;
+use function \PHPRamda\Math\inc;
 
 describe('inc', function() {
 	it('increments its argument', function() {

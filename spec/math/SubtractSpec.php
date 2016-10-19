@@ -1,7 +1,7 @@
 <?php
 
-use function \PHPRambda\Math\subtract;
-use const \PHPRambda\Functions\__;
+use function \PHPRamda\Math\subtract;
+use const \PHPRamda\Functions\__;
 
 describe('subtract', function() {
 	it('subtracts two numbers', function() {

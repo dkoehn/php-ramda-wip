@@ -1,7 +1,7 @@
 <?php
 
-use function \PHPRambda\Math\divide;
-use const \PHPRambda\Functions\__;
+use function \PHPRamda\Math\divide;
+use const \PHPRamda\Functions\__;
 
 describe('divide', function() {
 	it('divides two numbers', function() {
