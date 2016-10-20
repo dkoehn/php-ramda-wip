@@ -191,12 +191,28 @@ namespace PHPRamda\Internal {
 
 	function _reduce($fn, $acc, $list)
 	{
-		foreach ($list as $key => $value) {
-			$args = [$acc, $value, $key];
+		foreach ($list as $value) {
+			$args = [$acc, $value];
 			$acc = $fn(...$args);
 		}
 
 		return $acc;
+	}
+
+	function _slice($args, $from = 0, $to = null)
+	{
+		if ($to === null) {
+			return _slice($args, $from, count($args));
+		}
+
+		$list = [];
+		$idx = 0;
+		$len = max(0, min(count($args), $to) - $from);
+		while ($idx < $len) {
+			$list[$idx] = $args[$from + $idx];
+			$idx += 1;
+		}
+		return $list;
 	}
 
 	function _pipe($f = __, $g = __)

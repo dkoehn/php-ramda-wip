@@ -16,7 +16,11 @@ namespace PHPRamda\Lists {
 			} elseif (is_callable($functor)) {
 				return compose($fn, $functor);
 			} elseif (is_array($functor)) {
-				return array_map($fn, $functor);
+				$result = [];
+				foreach ($functor as $k => $val) {
+					$result[$k] = $fn($val);
+				}
+				return $result;
 			}
 
 			throw new \RuntimeException('Cannot map type '.gettype($functor));

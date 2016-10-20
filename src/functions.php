@@ -7,11 +7,33 @@ namespace PHPRamda\Functions {
 	use function \PHPRamda\Internal\_curryN;
 	use function \PHPRamda\Internal\_numArgs;
 	use function \PHPRamda\Internal\_pipe;
+	use function \PHPRamda\Internal\_slice;
 
 	use function \PHPRamda\Lists\reduce;
 	use function \PHPRamda\Lists\tail;
 
 	const __ = '__PLACHOLDER__';
+
+	function addIndex($fn = __)
+	{
+		return _curry1(function($fn) {
+			return curryN(_numArgs($fn), function(... $arguments) use ($fn) {
+				$idx = 0;
+				$origFn = $arguments[0];
+				$i = count($arguments) - 1;
+				$list = $arguments[count($arguments) - 1];
+				$args = _slice($arguments);
+				$args[0] = function(... $arguments) use ($origFn, &$idx, $list) {
+					$newArgs = array_merge($arguments, [$idx, $list]);
+					$result = $origFn(... $newArgs);
+					$idx += 1;
+					return $result;
+				};
+
+				return $fn(... $args);
+			});
+		}, $fn);
+	}
 
 	function ap($applicative = __, $fn = __)
 	{
