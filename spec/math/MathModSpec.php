@@ -19,22 +19,22 @@ describe('mathMod', function() {
 	});
 
 	it('computes the true modulo function', function() {
-		assertThat(mathMod(-17, 5), equalTo(3));
-		assertThat(mathMod(17, 5), equalTo(2));
-		assertThat(mathMod(17, 0), equalTo(null));
-		// assertThat(mathMod(17.2, 5), equalTo(2));
-		// assertThat(mathMod(17, 5.5), equalTo(2));
+		eq(mathMod(-17, 5), 3);
+		eq(mathMod(17, 5), 2);
+		eq(mathMod(17, 0), null);
+		// eq(mathMod(17.2, 5), 2);
+		// eq(mathMod(17, 5.5), 2);
 	});
 
 	it('is curried', function() {
 		$f = mathMod(29);
-		assertThat($f(6), equalTo(5));
+		eq($f(6), 5);
 	});
 
 
 	it('behaves right curried when passed `R.__` for its first argument', function() {
 		$mod5 = mathMod(__, 5);
-		assertThat($mod5(12), equalTo(2));
-		assertThat($mod5(8), equalTo(3));
+		eq($mod5(12), 2);
+		eq($mod5(8), 3);
 	});
 });

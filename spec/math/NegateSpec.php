@@ -4,8 +4,8 @@ use function \PHPRamda\Math\negate;
 
 describe('negate', function() {
 	it('negates its argument', function() {
-		assertThat(negate(-1), equalTo(1));
-		assertThat(negate(0), equalTo(0));
-		assertThat(negate(1), equalTo(-1));
+		eq(negate(-1), 1);
+		eq(negate(0), 0);
+		eq(negate(1), -1);
 	});
 });

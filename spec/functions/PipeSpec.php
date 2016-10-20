@@ -9,11 +9,11 @@ describe('pipe', function() {
     it('performs left-to-right function composition', function() {
         $f = pipe('intval', multiply(), map());
 
-        assertThat(_numArgs($f), identicalTo(2));
+        eq(_numArgs($f), 2);
         $g = $f('10');
-        assertThat($g([1, 2, 3]), identicalTo([10, 20, 30]));
+        eq($g([1, 2, 3]), [10, 20, 30]);
         $h = $f('10', 2);
-        assertThat($h([1, 2, 3]), identicalTo([2, 4, 6]));
+        eq($h([1, 2, 3]), [2, 4, 6]);
     });
 
     it('throws if given no arguments', function() {

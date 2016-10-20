@@ -4,9 +4,9 @@ use function \PHPRamda\Math\inc;
 
 describe('inc', function() {
 	it('increments its argument', function() {
-		assertThat(inc(-1), equalTo(0));
-		assertThat(inc(0), equalTo(1));
-		assertThat(inc(1), equalTo(2));
-		assertThat(inc(12.34), equalTo(13.34));
+		eq(inc(-1), 0);
+		eq(inc(0), 1);
+		eq(inc(1), 2);
+		eq(inc(12.34), 13.34);
 	});
 });

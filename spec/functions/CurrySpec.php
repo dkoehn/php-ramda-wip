@@ -10,50 +10,55 @@ describe('curry', function() {
 
 		$g = $f(12);
 
-		assertThat(15, equalTo($g(3, 6, 2)));
+		eq($g(3, 6, 2), 15);
 	});
+
 	it('curries multiple values', function() {
 		$f = curry(function($a, $b, $c, $d) { return ($a + $b * $c) / $d; });
 
 		$g = $f(12, 3);
-		assertThat(15, equalTo($g(6, 2)));
+		eq($g(6, 2), 15);
 
 		$h = $f(12, 3, 6);
-		assertThat(15, equalTo($h(2)));
+		eq($h(2), 15);
 	});
+
 	it('allows further currying of a curried function', function() {
 		$f = curry(function($a, $b, $c, $d) { return ($a + $b * $c) / $d; });
 
 		$g = $f(12);
-		assertThat(15, equalTo($g(3, 6, 2)));
+		eq($g(3, 6, 2), 15);
 
 		$h = $g(3);
-		assertThat(15, equalTo($h(6, 2)));
+		eq($h(6, 2), 15);
 	});
+
 	it('properly reports the length of the curried function', function() {
 		$f = curry(function($a, $b, $c, $d) { return ($a + $b * $c) / $d; });
-		assertThat(4, equalTo(_numArgs($f)));
+		eq(_numArgs($f), 4);
 
 		$g = $f(12);
-		assertThat(3, equalTo(_numArgs($g)));
+		eq(_numArgs($g), 3);
 
 		$h = $g(3);
-		assertThat(2, equalTo(_numArgs($h)));
+		eq(_numArgs($h), 2);
 
-		assertThat(1, equalTo(_numArgs($g(3, 6))));
+		eq(_numArgs($g(3, 6)), 1);
 	});
-	it('preserves context', function() {
-		$ctx = new \stdClass;
-		$ctx->x = 10;
 
-		$f = function($a, $b) { return $a + $b * $this->x; };
-		$g = curry($f);
+	// it('preserves context', function() {
+	// 	$ctx = new \stdClass;
+	// 	$ctx->x = 10;
+	//
+	// 	$f = function($a, $b) { return $a + $b * $this->x; };
+	// 	$g = curry($f);
+	//
+	// 	$g->bindTo($ctx);
+	//
+	// 	pending('can we bind $this?');
+	// 	//assertThat(42, equalTo($g(2, 4)));
+	// });
 
-		$g->bindTo($ctx);
-
-		pending('can we bind $this?');
-		//assertThat(42, equalTo($g(2, 4)));
-	});
 	it('supports placeholder', function() {
 		$f = function($a, $b, $c) { return [$a, $b, $c]; };
 
@@ -62,24 +67,24 @@ describe('curry', function() {
 		$g1 = $g(1);
 		$g2 = $g1(2);
 		$g3 = $g(1,2);
-		assertThat([1,2,3], identicalTo($g2(3)));
-		assertThat([1,2,3], identicalTo($g1(2,3)));
-		assertThat([1,2,3], identicalTo($g3(3)));
-		assertThat([1,2,3], identicalTo($g(1,2,3)));
+		eq($g2(3), [1, 2, 3]);
+		eq($g1(2, 3), [1, 2, 3]);
+		eq($g3(3), [1, 2, 3]);
+		eq($g(1, 2, 3), [1, 2, 3]);
 
 		$gPartial1 = $g(__, 2, 3);
 		$gPartial2 = $g(1, __, 3);
 		$gPartial3 = $g(1, 2, __);
-		assertThat([1,2,3], identicalTo($gPartial1(1)));
-		assertThat([1,2,3], identicalTo($gPartial2(2)));
-		assertThat([1,2,3], identicalTo($gPartial3(3)));
+		eq($gPartial1(1), [1, 2, 3]);
+		eq($gPartial2(2), [1, 2, 3]);
+		eq($gPartial3(3), [1, 2, 3]);
 
 		$gPartial23 = $g(1, __, __);
 		$gPartial13 = $g(__, 2, __);
 		$gPartial12 = $g(__, __, 3);
-		assertThat([1,2,3], identicalTo($gPartial23(2, 3)));
-		assertThat([1,2,3], identicalTo($gPartial13(1, 3)));
-		assertThat([1,2,3], identicalTo($gPartial12(1, 2)));
+		eq($gPartial23(2, 3), [1, 2, 3]);
+		eq($gPartial13(1, 3), [1, 2, 3]);
+		eq($gPartial12(1, 2), [1, 2, 3]);
 	});
 
 	it('forwards extra arguments', function() {
@@ -88,13 +93,16 @@ describe('curry', function() {
 		};
 
 		$g = curry($f);
-		assertThat([1,2,3], identicalTo($g(1, 2, 3)));
-		assertThat([1,2,3, 4], identicalTo($g(1, 2, 3, 4)));
+		eq($g(1, 2, 3), [1, 2, 3]);
+		eq($g(1, 2, 3, 4), [1, 2, 3, 4]);
+
 		$h = $g(1,2);
-		assertThat([1,2,3,4], identicalTo($h(3, 4)));
+		eq($h(3, 4), [1, 2, 3, 4]);
+
 		$h = $g(1);
-		assertThat([1,2,3,4], identicalTo($h(2, 3, 4)));
+		eq($h(2, 3, 4), [1, 2, 3, 4]);
+
 		$h1 = $h(2);
-		assertThat([1,2,3,4], identicalTo($h1(3, 4)));
+		eq($h1(3, 4), [1, 2, 3, 4]);
 	});
 });
