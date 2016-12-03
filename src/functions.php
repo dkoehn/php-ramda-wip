@@ -20,7 +20,6 @@ namespace PHPRamda\Functions {
 			return curryN(_numArgs($fn), function(... $arguments) use ($fn) {
 				$idx = 0;
 				$origFn = $arguments[0];
-				$i = count($arguments) - 1;
 				$list = $arguments[count($arguments) - 1];
 				$args = _slice($arguments);
 				$args[0] = function(... $arguments) use ($origFn, &$idx, $list) {
@@ -69,9 +68,10 @@ namespace PHPRamda\Functions {
 
 	function curry(callable $fn, ...$params)
 	{
-		return _curry1(function($fn) {
-			return curryN(_numArgs($fn), $fn);
-		}, $fn, ...$params);
+		$args = array_merge([$fn], $params);
+		return _curry1(function($fn, ...$params) {
+			return curryN(_numArgs($fn), $fn, ...$params);
+		}, ...$args);
 	}
 
 	function pipe(...$args)
@@ -87,7 +87,7 @@ namespace PHPRamda\Functions {
 	function curryN($arity, callable $fn, ...$params)
 	{
 		if ($arity === 1) {
-			return _curry1($fn);
+			return _curry1($fn, $params);
 		}
 
 		return _arity($arity, _curryN($arity, $params, $fn));
