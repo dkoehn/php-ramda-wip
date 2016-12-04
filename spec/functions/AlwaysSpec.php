@@ -3,36 +3,29 @@
 use function \PHPRamda\Functions\always;
 
 describe('always', function() {
-	it('returns a function that returns the object initially supplied', function() {
-		$theMeaning = always(42);
-		eq($theMeaning(), 42);
-		eq($theMeaning(10), 42);
-		eq($theMeaning(false), 42);
-	});
+    it('returns a function that returns the object initially supplied', function() {
+        $theMeaning = always(42);
+        eq($theMeaning(), 42);
+        eq($theMeaning(10), 42);
+        eq($theMeaning(false), 42);
+    });
 
-	it('works with various types', function() {
-		$f = always(false);
-		eq($f(), false);
-		$f = always('abc');
-		eq($f(), 'abc');
-		$f = always(['a' => 1, 'b' => 2]);
-		eq($f(), ['a' => 1, 'b' => 2]);
-
-		$obj = ['a' => 1, 'b' => 2];
-		$f = always($obj);
-		eq($f(), $obj);
-
-		$now = new \DateTime('1776-07-04');
-		$f = always($now);
-		eq($f(), $now);
-
-		$f = always(null);
-		eq($f(), null);
-	});
-
-	it('is curried', function() {
-		$f = always();
-		$f2 = $f(true);
-		eq($f2(), true);
-	});
+    it('works with various types', function() {
+        $alwaysFalse = always(false);
+        eq($alwaysFalse(false), false);
+        $alwaysAbc = always('abc');
+        eq($alwaysAbc(), 'abc');
+        $alwaysHash = always(['a' => 1, 'b' => 2]);
+        eq($alwaysHash(), ['a' => 1, 'b' => 2]);
+        $obj = new \stdClass;
+        $obj->a = 1;
+        $obj->b = 2;
+        $alwaysObj = always($obj);
+        eq($alwaysObj(), $obj);
+        $now = \DateTime::createFromFormat('Y-m-d', '1776-06-04');
+        $alwaysNow = always($now);
+        eq($alwaysNow(), $now);
+        $alwaysNull = always(null);
+        eq($alwaysNull(), null);
+    });
 });

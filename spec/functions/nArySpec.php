@@ -17,7 +17,7 @@ describe('nAry', function() {
 		$fn = nAry(3, function($a, $b, $c, $d) { return func_get_args(); });
 		eq(_numArgs($fn), 3);
 		eq($fn(1, 2, 3, 4), [1, 2, 3, null]);
-		eq($fn(1), [1, null, null, null]);
+		eq($fn(1, 2, 3), [1, 2, 3, null]);
 	});
 
 //	it('creates functions of arity less than or equal to ten', function() {

@@ -113,8 +113,8 @@ namespace PHPRamda\Functions {
 	function nAry($n = __, $fn = __)
 	{
 		return _curry2(function($n, $fn) {
-			$callFn = function($args) use ($n, $fn) {
-				$numArgs = _numArgs($fn);
+			$numArgs = _numArgs($fn);
+			$callFn = function($args) use ($n, $fn, $numArgs) {
 				if ($numArgs > count($args)) {
 					for ($i = count($args); $i < $numArgs; $i++) {
 						$args[] = null;
@@ -133,7 +133,7 @@ namespace PHPRamda\Functions {
 				case 2:
 					return function($a, $b) use ($callFn) { return $callFn([$a, $b]); };
 				case 3:
-					return function($a, $b, $c) use ($callFn) { return $callFn([$a, $b, $c]); };
+					return function($a = null, $b = null, $c = null) use ($callFn) { return $callFn([$a, $b, $c]); };
 				case 4:
 					return function($a, $b, $c, $d) use ($callFn) { return $callFn([$a, $b, $c, $d]); };
 				case 5:
