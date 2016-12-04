@@ -34,6 +34,15 @@ namespace PHPRamda\Functions {
 		}, $fn);
 	}
 
+	function always($val = __)
+	{
+		return _curry1(function($val) {
+			return function() use ($val) {
+				return $val;
+			};
+		}, $val);
+	}
+
 	function ap($applicative = __, $fn = __)
 	{
 		return _curry2(function($applicative, $fn) {
@@ -56,6 +65,33 @@ namespace PHPRamda\Functions {
 		}, $applicative, $fn);
 	}
 
+	function apply($fn = __, $list = __)
+	{
+		return _curry2(function($fn, $list) {
+			return $fn(...$list);
+		}, $fn, $list);
+	}
+
+	//TODO: applySpec
+	//function applySpec()
+
+	function binary($fn = __)
+	{
+		return nAry(2, $fn);
+	}
+
+	//TODO: bind
+	//function bind()
+
+	function comparator($pred = __)
+	{
+		return _curry1(function($pred) {
+			return function($a, $b) use ($pred) {
+				return $pred($a, $b) ? -1 : ($pred($b, $a) ? 1 : 0);
+			};
+		}, $pred);
+	}
+
 	function compose(...$args)
 	{
 		if (count($args) === 0) {
@@ -72,6 +108,50 @@ namespace PHPRamda\Functions {
 		return _curry1(function($fn, ...$params) {
 			return curryN(_numArgs($fn), $fn, ...$params);
 		}, ...$args);
+	}
+
+	function nAry($n = __, $fn = __)
+	{
+		return _curry2(function($n, $fn) {
+			$callFn = function($args) use ($n, $fn) {
+				$numArgs = _numArgs($fn);
+				if ($numArgs > count($args)) {
+					for ($i = count($args); $i < $numArgs; $i++) {
+						$args[] = null;
+					}
+				} else {
+					$args = array_slice($args, 0, $numArgs);
+				}
+
+				return $fn(...$args);
+			};
+			switch ($n) {
+				case 0:
+					return function() use ($callFn) { return $callFn([]); };
+				case 1:
+					return function($a) use ($callFn) { return $callFn([$a]); };
+				case 2:
+					return function($a, $b) use ($callFn) { return $callFn([$a, $b]); };
+				case 3:
+					return function($a, $b, $c) use ($callFn) { return $callFn([$a, $b, $c]); };
+				case 4:
+					return function($a, $b, $c, $d) use ($callFn) { return $callFn([$a, $b, $c, $d]); };
+				case 5:
+					return function($a, $b, $c, $d, $e) use ($callFn) { return $callFn([$a, $b, $c, $d, $e]); };
+				case 6:
+					return function($a, $b, $c, $d, $e, $f) use ($callFn) { return $callFn([$a, $b, $c, $d, $e, $f]); };
+				case 7:
+					return function($a, $b, $c, $d, $e, $f, $g) use ($callFn) { return $callFn([$a, $b, $c, $d, $e, $f, $g]); };
+				case 8:
+					return function($a, $b, $c, $d, $e, $f, $g, $h) use ($callFn) { return $callFn([$a, $b, $c, $d, $e, $f, $g, $h]); };
+				case 9:
+					return function($a, $b, $c, $d, $e, $f, $g, $h, $i) use ($callFn) { return $callFn([$a, $b, $c, $d, $e, $f, $g, $h, $i]); };
+				case 10:
+					return function($a, $b, $c, $d, $e, $f, $g, $h, $i, $j) use ($callFn) { return $callFn([$a, $b, $c, $d, $e, $f, $g, $h, $i, $j]); };
+				default:
+					throw new \RuntimeException('First argument to nAry must be a non-negative integer no greater than ten');
+			}
+		}, $n, $fn);
 	}
 
 	function pipe(...$args)

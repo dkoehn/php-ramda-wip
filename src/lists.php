@@ -37,6 +37,14 @@ namespace PHPRamda\Lists {
 		}, $fn, $acc, $list);
 	}
 
+	function sort($comparator = __, $list = __)
+	{
+		return _curry2(function($comparator, $list) {
+			usort($list, $comparator);
+			return $list;
+		}, $comparator, $list);
+	}
+
 	function head($list = __)
 	{
 		return nth(0, $list);

@@ -1,7 +1,8 @@
 {
   "name": "php-ramda",
   "autoload": {
-    "files": [ "src/internal.php", "src/functions.php", "src/math.php", "src/lists.php", "src/object.php" ]
+    "files": [ "src/internal.php", "src/functions.php", "src/math.php", "src/lists.php", "src/object.php",
+               "src/relation.php" ]
   },
   "require-dev": {
     "davedevelopment/dspec": "dev-master",
