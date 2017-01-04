@@ -80,8 +80,20 @@ namespace PHPRamda\Functions {
 		return nAry(2, $fn);
 	}
 
-	//TODO: bind
-	//function bind()
+	function bind($fn = __, $thisObj = __)
+	{
+		return _curry2(function($fn, $thisObj) {
+			if (!$fn instanceof \Closure) {
+				throw new \InvalidArgumentException('$fn must be a \Closure');
+			}
+
+			return \Closure::bind($fn, $thisObj);
+		}, $fn, $thisObj);
+	}
+
+	//TODO: call?
+
+
 
 	function comparator($pred = __)
 	{
@@ -102,12 +114,114 @@ namespace PHPRamda\Functions {
 		return pipe(...$reversedArgs);
 	}
 
+	function construct($type = __)
+	{
+		return _curry1(function($type) {
+			return function(...$args) use ($type) {
+				return new $type(...$args);
+			};
+		}, $type);
+	}
+
+	function constructN($n = __, $type = __) {
+		return _curry2(function($n, $type) {
+			return curryN($n, function(...$args) use ($type) {
+				return new $type(...$args);
+			});
+		}, $n, $type);
+	}
+
+	function converge($after = __, $fns = __)
+	{
+		return _curry2(function($after, $fns) {
+			$maxArity = \PHPRamda\Internal\_reduce(\PHPRamda\Relation\max(), 0, \PHPRamda\Lists\map(function($fn) { return _numArgs($fn); }, $fns));
+			return curryN($maxArity, function(...$args) use ($after, $fns) {
+				$params = \PHPRamda\Lists\map(function($fn) use ($args) {
+					return $fn(...$args);
+				}, $fns);
+
+				return $after(...$params);
+			});
+		}, $after, $fns);
+	}
+
 	function curry(callable $fn, ...$params)
 	{
 		$args = array_merge([$fn], $params);
 		return _curry1(function($fn, ...$params) {
 			return curryN(_numArgs($fn), $fn, ...$params);
 		}, ...$args);
+	}
+
+	function curryN($arity, callable $fn, ...$params)
+	{
+		//TODO: Why $arity == 1 doesn't work?
+//		if ($arity === 1) {
+//			return _curry1($fn, $params);
+//		}
+
+		return _arity($arity, _curryN($arity, $params, $fn));
+	}
+
+	function F()
+	{
+		return false;
+	}
+
+	function flip($fn = __) {
+		return _curry1(function($fn) {
+			return curryN(2, function(...$args) use ($fn) {
+				$a = $args[0];
+				$b = $args[1];
+
+				$args[0] = $b;
+				$args[1] = $a;
+
+				return $fn(...$args);
+			});
+//			return _curry2(function(...$args) use ($fn) {
+//				$a = $args[0];
+//				$b = $args[1];
+//
+//				$args[0] = $b;
+//				$args[1] = $a;
+//
+//				return $fn(...$args);
+//			});
+		}, $fn);
+	}
+
+	function identity($val = __)
+	{
+		return _curry1(function($val) {
+			return $val;
+		}, $val);
+	}
+
+	//TODO: invoker?
+
+	function juxt($fns = __)
+	{
+		return _curry1(function($fns) {
+			return converge(function(...$args) {
+				return $args;
+			}, $fns);
+		}, $fns);
+	}
+
+	function memoize($fn = __)
+	{
+		return _curry1(function($fn) {
+			$cache = [];
+			return function(...$args) use ($fn, &$cache) {
+				$key = implode('||', $args);
+				if (!array_key_exists($key, $cache)) {
+					$cache[$key] = $fn(...$args);
+				}
+
+				return $cache[$key];
+			};
+		}, $fn);
 	}
 
 	function nAry($n = __, $fn = __)
@@ -154,6 +268,42 @@ namespace PHPRamda\Functions {
 		}, $n, $fn);
 	}
 
+	function nthArg($n = __)
+	{
+		return _curry1(function($n) {
+			return function(...$args) use ($n) {
+				return array_slice($args, $n, 1);
+			};
+		}, $n);
+	}
+
+	function of($a = __)
+	{
+		return _curry1(function($a) {
+			return [$a];
+		}, $a);
+	}
+
+	function once($fn = __)
+	{
+		return _curry1(function($fn) {
+			$invoked = false;
+			$val = null;
+			return function(...$args) use ($fn, &$invoked, &$val) {
+				if (!$invoked) {
+					$val = $fn(...$args);
+					$invoked = true;
+				}
+
+				return $val;
+			};
+		}, $fn);
+	}
+
+	//TODO: partial
+	//TODO: partialRight
+
+
 	function pipe(...$args)
 	{
 		if (count($args) === 0) {
@@ -164,12 +314,91 @@ namespace PHPRamda\Functions {
 		return _arity($numArgs, reduce(_pipe(), $args[0], tail($args)));
 	}
 
-	function curryN($arity, callable $fn, ...$params)
+	function T()
 	{
-		if ($arity === 1) {
-			return _curry1($fn, $params);
-		}
+		return true;
+	}
 
-		return _arity($arity, _curryN($arity, $params, $fn));
+	function tap($fn = __, $x = __)
+	{
+		return _curry2(function($fn, $x) {
+			$fn($x);
+			return $x;
+		}, $fn, $x);
+	}
+
+	function test($regex = __, $str = __)
+	{
+		return _curry2(function($regex, $str) {
+			return preg_match($regex, $str) == 1;
+		}, $regex, $str);
+	}
+
+	//TODO: tryCatch
+
+	function unapply($fn = __)
+	{
+		return _curry1(function($fn) {
+			return function(...$args) use ($fn) {
+				return $fn($args);
+			};
+		}, $fn);
+	}
+
+	function unary($fn = __)
+	{
+		return _curry1(function($fn) {
+			return nAry(1, $fn);
+		}, $fn);
+	}
+
+	function uncurryN($depth = __, $fn = __)
+	{
+		return _curry2(function($depth, $fn) {
+			return curryN($depth, function(...$args) use ($depth, $fn) {
+				$currentDepth = 1;
+				$value = $fn;
+				$idx = 0;
+
+				while ($currentDepth <= $depth && is_callable($value)) {
+					$endIdx = $currentDepth === $depth ? count($args) : $idx + _numArgs($value);
+					$params = array_slice($args, $idx, $endIdx - $idx);
+					$value = $value(...$params);
+					$currentDepth += 1;
+					$idx = $endIdx;
+				}
+
+				return $value;
+			});
+		}, $depth, $fn);
+	}
+
+	function useWith($fn = __, $fns = __)
+	{
+		return _curry2(function($fn, $fns) {
+			return _arity(count($fns), function(...$args) use ($fn, $fns) {
+				$params = [];
+				for ($i = 0; $i < count($args); $i++) {
+					if ($i < count($fns)) {
+						$transformer = $fns[$i];
+						$params[] = $transformer($args[$i]);
+					} else {
+						$params[] = $args[$i];
+					}
+				}
+
+				return $fn(...$params);
+			});
+		}, $fn, $fns);
+	}
+
+	function wrap($next = __, $fn = __)
+	{
+		return _curry2(function($next, $fn) {
+			$numArgs = _numArgs($next);
+			return nAry($numArgs, function(...$args) use ($next, $fn) {
+				return $fn($next, ...$args);
+			});
+		}, $next, $fn);
 	}
 }
