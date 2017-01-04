@@ -213,14 +213,20 @@ namespace PHPRamda\Functions {
 	{
 		return _curry1(function($fn) {
 			$cache = [];
-			return function(...$args) use ($fn, &$cache) {
-				$key = implode('||', $args);
+			return curryN(_numArgs($fn), function(...$args) use ($fn, &$cache) {
+				$key = implode('||', \PHPRamda\Lists\map(function($a) {
+					if (is_object($a) || is_array($a)) {
+						return json_encode($a);
+					}
+					return $a;
+				}, $args));
+
 				if (!array_key_exists($key, $cache)) {
 					$cache[$key] = $fn(...$args);
 				}
 
 				return $cache[$key];
-			};
+			});
 		}, $fn);
 	}
 
@@ -271,9 +277,19 @@ namespace PHPRamda\Functions {
 	function nthArg($n = __)
 	{
 		return _curry1(function($n) {
-			return function(...$args) use ($n) {
-				return array_slice($args, $n, 1);
+			$fn = function(...$args) use ($n) {
+				if ($n < 0 && abs($n) > count($args)) {
+					return null;
+				}
+
+				$ret = array_slice($args, $n, 1);
+				return isset($ret[0]) ? $ret[0] : null;
 			};
+			if ($n >= 0) {
+				return curryN($n + 1, $fn);
+			} else {
+				return $fn;
+			}
 		}, $n);
 	}
 
