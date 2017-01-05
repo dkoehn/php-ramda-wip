@@ -189,6 +189,26 @@ namespace PHPRamda\Internal {
 		return $val === __;
 	}
 
+	function _makeFlat($recursive)
+	{
+		$flatt = function($list) use ($recursive, &$flatt) {
+			$result = [];
+			foreach ($list as $lv) {
+				if (is_array($lv)) {
+					$value = $recursive ? $flatt($lv) : $lv;
+					foreach ($value as $v) {
+						$result[] = $v;
+
+					}
+				} else {
+					$result[] = $lv;
+				}
+			}
+			return $result;
+		};
+		return $flatt;
+	}
+
 	function _reduce($fn, $acc, $list)
 	{
 		foreach ($list as $value) {

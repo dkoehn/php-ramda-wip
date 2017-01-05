@@ -8,6 +8,80 @@ namespace PHPRamda\Lists {
 	use function PHPRamda\Internal\_curry3;
 	use function PHPRamda\Internal\_reduce;
 
+	function adjust($fn = __, $idx = __, $list = __)
+	{
+		return _curry3(function($fn, $idx, $list) {
+			if ($idx >= count($list) || $idx < 0 - count($list)) {
+				return $list;
+			}
+			$start = $idx < 0 ? count($list) : 0;
+			$_idx = $start + $idx;
+			$list[$_idx] = $fn($list[$_idx]);
+			return $list;
+		}, $fn, $idx, $list);
+	}
+
+	function all($fn = __, $list = __)
+	{
+		return _curry2(function($fn, $list) {
+			foreach ($list as $val) {
+				if (!$fn($val)) {
+					return false;
+				}
+			}
+
+			return true;
+		}, $fn, $list);
+	}
+
+	function any($fn = __, $list = __)
+	{
+		return _curry2(function($fn, $list) {
+			foreach ($list as $val) {
+				if ($fn($val)) {
+					return true;
+				}
+			}
+
+			return false;
+		}, $fn, $list);
+	}
+
+	//TODO: aperture
+
+	function append($el = __, $list = __)
+	{
+		return _curry2(function($el, $list) {
+			$list[] = $el;
+			return $list;
+		}, $el, $list);
+	}
+
+	function chain($fn = __, $monad = __)
+	{
+		return _curry2(function($fn, $monad) {
+			if (is_callable($monad)) {
+				return function($x) use ($fn, $monad) {
+					$fn2 = $fn($monad($x));
+					return $fn2($x);
+				};
+			}
+
+			$flat = \PHPRamda\Internal\_makeFlat(false);
+			return $flat(map($fn, $monad));
+		}, $fn, $monad);
+	}
+
+	function head($list = __)
+	{
+		return nth(0, $list);
+	}
+
+	function last($list = __)
+	{
+		return nth(-1, $list);
+	}
+
 	function map($fn = __, $functor = __)
 	{
 		return _curry2(function($fn, $functor) {
@@ -25,34 +99,6 @@ namespace PHPRamda\Lists {
 
 			throw new \RuntimeException('Cannot map type '.gettype($functor));
 		}, $fn, $functor);
-	}
-
-	function reduce($fn = __, $acc = __, $list = __)
-	{
-		return _curry3(function($fn, $acc, $list) {
-			if (is_object($list) && method_exists($list, 'reduce')) {
-				return $list->reduce($fn, $acc);
-			}
-			return _reduce($fn, $acc, $list);
-		}, $fn, $acc, $list);
-	}
-
-	function sort($comparator = __, $list = __)
-	{
-		return _curry2(function($comparator, $list) {
-			usort($list, $comparator);
-			return $list;
-		}, $comparator, $list);
-	}
-
-	function head($list = __)
-	{
-		return nth(0, $list);
-	}
-
-	function last($list = __)
-	{
-		return nth(-1, $list);
 	}
 
 	function nth($offset = __, $list = __)
@@ -77,6 +123,24 @@ namespace PHPRamda\Lists {
 			$ret = array_slice($list, $offset, 1);
 			return isset($ret[0]) ? $ret[0] : null;
 		}, $offset, $list);
+	}
+
+	function reduce($fn = __, $acc = __, $list = __)
+	{
+		return _curry3(function($fn, $acc, $list) {
+			if (is_object($list) && method_exists($list, 'reduce')) {
+				return $list->reduce($fn, $acc);
+			}
+			return _reduce($fn, $acc, $list);
+		}, $fn, $acc, $list);
+	}
+
+	function sort($comparator = __, $list = __)
+	{
+		return _curry2(function($comparator, $list) {
+			usort($list, $comparator);
+			return $list;
+		}, $comparator, $list);
 	}
 
 	function tail($list = __)
