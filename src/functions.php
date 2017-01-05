@@ -305,14 +305,15 @@ namespace PHPRamda\Functions {
 		return _curry1(function($fn) {
 			$invoked = false;
 			$val = null;
-			return function(...$args) use ($fn, &$invoked, &$val) {
+			$n = _numArgs($fn);
+			return _arity($n, function(...$args) use ($fn, &$invoked, &$val) {
 				if (!$invoked) {
 					$val = $fn(...$args);
 					$invoked = true;
 				}
 
 				return $val;
-			};
+			});
 		}, $fn);
 	}
 
@@ -346,6 +347,10 @@ namespace PHPRamda\Functions {
 	function test($regex = __, $str = __)
 	{
 		return _curry2(function($regex, $str) {
+			if (!is_string($regex) || !is_string($str)) {
+				throw new \InvalidArgumentException('Parameters must be strings');
+			}
+
 			return preg_match($regex, $str) == 1;
 		}, $regex, $str);
 	}
