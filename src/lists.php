@@ -104,7 +104,82 @@ namespace PHPRamda\Lists {
 	{
 		return _curry2(function($a, $list) {
 			return in_array($a, $list);
-		});
+		}, $a, $list);
+	}
+
+	function drop($n = __, $xs = __)
+	{
+		return _curry2(function($n, $xs) {
+			if (is_string($xs)) {
+				return substr($xs, max(0, $n)) ?: '';
+			}
+			return array_slice($xs, max(0, $n));
+		}, $n, $xs);
+	}
+
+	function dropLast($n = __, $xs = __)
+	{
+		return _curry2(function($n, $xs) {
+			if ($n <= 0) {
+				return $xs;
+			}
+
+			if (is_string($xs)) {
+				return substr($xs, 0, 0 - $n);
+			}
+			return array_slice($xs, 0, 0 - $n);
+		}, $n, $xs);
+	}
+
+	function dropLastWhile($pred = __, $list = __)
+	{
+		return _curry2(function($pred, $list) {
+			$idx = count($list) - 1;
+			while ($idx >= 0 && $pred($list[$idx])) {
+				$idx--;
+			}
+
+			return array_slice($list, 0, $idx + 1);
+		}, $pred, $list);
+	}
+
+	function dropRepeats($list = __)
+	{
+		return _curry1(function($list) {
+			return dropRepeatsWith(function($a, $b) { return $a == $b; }, $list);
+		}, $list);
+	}
+
+	function dropRepeatsWith($pred = __, $list = __)
+	{
+		return _curry2(function($pred, $list) {
+			$result = [];
+			$idx = 1;
+			$len = count($list);
+			if ($len !== 0) {
+				$result[] = $list[0];
+				while ($idx < $len) {
+					if (!$pred(last($result), $list[$idx])) {
+						$result[] = $list[$idx];
+					}
+					$idx += 1;
+				}
+			}
+			return $result;
+		}, $pred, $list);
+	}
+
+	function dropWhile($pred = __, $list = __)
+	{
+		return _curry2(function($pred, $list) {
+			$idx = 0;
+			$len = count($list);
+			while ($idx < $len && $pred($list[$idx])) {
+				$idx += 1;
+			}
+
+			return array_slice($list, $idx);
+		}, $pred, $list);
 	}
 
 	function head($list = __)
