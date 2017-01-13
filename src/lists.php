@@ -72,6 +72,41 @@ namespace PHPRamda\Lists {
 		}, $fn, $monad);
 	}
 
+	function concat($a = __, $b = __)
+	{
+		return _curry2(function($a, $b) {
+			if ($a === null || (is_object($a) && !method_exists($a, 'concat'))) {
+				throw new \RuntimeException('Must be an array, string, or object with a concat method');
+			}
+
+			if (is_array($a) && !is_array($b)) {
+				throw new \RuntimeException('Must be an array, string, or object with a concat method');
+			}
+
+			if (is_array($a)) {
+				foreach ($b as $k => $v) {
+					if (intval($k) === $k) {
+						$a[] = $v;
+					} else {
+						$a[$k] = $v;
+					}
+				}
+				return $a;
+			} elseif (is_object($a) && method_exists($a, 'concat')) {
+				return $a->concat($b);
+			} else {
+				return $a . $b;
+			}
+		}, $a, $b);
+	}
+
+	function contains($a = __, $list = __)
+	{
+		return _curry2(function($a, $list) {
+			return in_array($a, $list);
+		});
+	}
+
 	function head($list = __)
 	{
 		return nth(0, $list);

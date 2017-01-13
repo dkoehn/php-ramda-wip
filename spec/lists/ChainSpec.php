@@ -1,25 +1,24 @@
 <?php
 
 use function PHPRamda\Lists\chain;
+use function PHPRamda\Internal\_numArgs;
 
 describe('chain', function() {
-//	var intoArray = R.into([]);
-//	function add1(x) { return [x + 1]; }
-//	function dec(x) { return [x - 1]; }
-//	function times2(x) { return [x * 2]; }
+//	$intoArray = into([]);
+	$add1 = function($x) { return [$x + 1]; };
+	$dec = function($x) { return [$x - 1]; };
+	$times2 = function($x) { return [$x * 2]; };
 
-	it('maps a function over a nested list and returns the (shallow) flattened result', function() {
-		pending();
-//		eq(R.chain(times2, [1, 2, 3, 1, 0, 10, -3, 5, 7]), [2, 4, 6, 2, 0, 20, -6, 10, 14]);
-//		eq(R.chain(times2, [1, 2, 3]), [2, 4, 6]);
+	it('maps a function over a nested list and returns the (shallow) flattened result', function() use ($times2) {
+		eq(chain($times2, [1, 2, 3, 1, 0, 10, -3, 5, 7]), [2, 4, 6, 2, 0, 20, -6, 10, 14]);
+		eq(chain($times2, [1, 2, 3]), [2, 4, 6]);
 	});
 
 	it('does not flatten recursively', function() {
-		pending();
-//		function f(xs) {
-//			return xs[0] ? [xs[0]] : [];
-//		}
-//		eq(R.chain(f, [[1], [[2], 100], [], [3, [4]]]), [1, [2], 3]);
+		$f = function($xs) {
+			return isset($xs[0]) ? [$xs[0]] : [];
+		};
+		eq(chain($f, [[1], [[2], 100], [], [3, [4]]]), [1, [2], 3]);
 	});
 
 	it('maps a function (a -> [b]) into a (shallow) flat result', function() {
@@ -28,19 +27,14 @@ describe('chain', function() {
 	});
 
 	it('interprets ((->) r) as a monad', function() {
-		pending();
-//		var h = function(r) { return r * 2; };
-//		var f = function(a) {
-//			return function(r) {
-//				return r + a;
-//			};
-//		};
-//		var bound = R.chain(f, h);
-//		// (>>=) :: (r -> a) -> (a -> r -> b) -> (r -> b)
-//		// h >>= f = \w -> f (h w) w
-//		eq(bound(10), (10 * 2) + 10);
-//
-//		eq(R.chain(R.append, R.head)([1, 2, 3]), [1, 2, 3, 1]);
+		$h = function($r) { return $r * 2; };
+		$f = function($a) {
+			return function($r) use ($a) {
+				return $r + $a;
+			};
+		};
+		$bound = chain($f, $h);
+		eq($bound(10), (10 * 2) + 10);
   });
 
 	it('dispatches to objects that implement `chain`', function() {
@@ -54,11 +48,10 @@ describe('chain', function() {
 //		eq(_isTransformer(R.chain(add1, listXf)), true);
 	});
 
-	it('composes', function() {
-		pending();
-//		var mdouble = R.chain(times2);
-//		var mdec = R.chain(dec);
-//		eq(mdec(mdouble([10, 20, 30])), [19, 39, 59]);
+	it('composes', function() use ($times2, $dec) {
+		$mdouble = chain($times2);
+		$mdec = chain($dec);
+		eq($mdec($mdouble([10, 20, 30])), [19, 39, 59]);
 	});
 
 	it('can compose transducer-style', function() {
@@ -69,15 +62,13 @@ describe('chain', function() {
 //		eq(intoArray(xcomp, [10, 20, 30]), [18, 38, 58]);
 	});
 
-	it('is curried', function() {
-		pending();
-//		var flatInc = R.chain(add1);
-//		eq(flatInc([1, 2, 3, 4, 5, 6]), [2, 3, 4, 5, 6, 7]);
+	it('is curried', function() use ($add1) {
+		$flatInc = chain($add1);
+		eq($flatInc([1, 2, 3, 4, 5, 6]), [2, 3, 4, 5, 6, 7]);
 	});
 
-	it('correctly reports the arity of curried versions', function() {
-		pending();
-//		var inc = R.chain(add1);
-//		eq(inc.length, 1);
+	it('correctly reports the arity of curried versions', function() use ($add1) {
+		$inc = chain($add1);
+		eq(_numArgs($inc), 1);
 	});
 });
