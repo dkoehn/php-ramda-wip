@@ -182,6 +182,122 @@ namespace PHPRamda\Lists {
 		}, $pred, $list);
 	}
 
+	function filter($pred = __, $list = __)
+	{
+		return _curry2(function($pred, $list) {
+			$ret = [];
+			foreach ($list as $k => $v) {
+				if ($pred($v)) {
+					if (intval($k) === $k) {
+						$ret[] = $v;
+					} else {
+						$ret[$k] = $v;
+					}
+				}
+			}
+			return $ret;
+		}, $pred, $list);
+	}
+
+	function find($pred = __, $list = __)
+	{
+		return _curry2(function($pred, $list) {
+			foreach ($list as $v) {
+				if ($pred($v)) {
+					return $v;
+				}
+			}
+
+			return null;
+		}, $pred, $list);
+	}
+
+	function findIndex($pred = __, $list = __)
+	{
+		return _curry2(function($pred, $list) {
+			$idx = 0;
+			$len = count($list);
+			while ($idx < $len) {
+				if ($pred($list[$idx])) {
+					return $idx;
+				}
+				$idx += 1;
+			}
+
+			return -1;
+		}, $pred, $list);
+	}
+
+	function findLast($pred = __, $list = __) {
+		return _curry2(function($pred, $list) {
+			$idx = count($list) - 1;
+			while ($idx >= 0) {
+				if ($pred($list[$idx])) {
+					return $list[$idx];
+				}
+				$idx -= 1;
+			}
+			return null;
+		}, $pred, $list);
+	}
+
+	function findLastIndex($pred = __, $list = __) {
+		return _curry2(function($pred, $list) {
+			$idx = count($list) - 1;
+			while ($idx >= 0) {
+				if ($pred($list[$idx])) {
+					return $idx;
+				}
+				$idx -= 1;
+			}
+			return -1;
+		}, $pred, $list);
+	}
+
+	function flatten($list = __) {
+		return _curry1(function($list) {
+			$flat = $flat = \PHPRamda\Internal\_makeFlat(true);
+			return $flat($list);
+		}, $list);
+	}
+
+	function each($fn = __, $list = __)
+	{
+		return _curry2(function($fn, $list) {
+			foreach ($list as $v) {
+				$fn($v);
+			}
+
+			return $list;
+		}, $fn , $list);
+	}
+
+	function fromPairs($pairs = __)
+	{
+		return _curry1(function($pairs) {
+			$result = [];
+			foreach ($pairs as $pair) {
+				$result[nth(0, $pair)] = nth(-1, $pair);
+			}
+			return $result;
+		}, $pairs);
+	}
+
+	function groupBy($fn = __, $list = __)
+	{
+		return _curry2(function($fn, $list) {
+			$result = [];
+			foreach ($list as $item) {
+				$v = $fn($item);
+				if (!array_key_exists($v, $result)) {
+					$result[$v] = [];
+				}
+				$result[$v][] = $item;
+			}
+			return $result;
+		}, $fn, $list);
+	}
+
 	function head($list = __)
 	{
 		return nth(0, $list);
